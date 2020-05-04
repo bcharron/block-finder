@@ -1,3 +1,21 @@
+/*
+ * Block Finder - A Minecraft block finder
+ * Copyright (C) 2020 Benjamin Charron <bcharron@pobox.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package main
 
 import (
@@ -7,11 +25,10 @@ import (
     "flag"
     "fmt"
     "io/ioutil"
-    //"io"
     "log"
     "os"
     "github.com/seebs/nbt"
-    //"reflect"
+    //"runtime/pprof"
     "strings"
 )
 
@@ -250,7 +267,7 @@ func getBlocks(levelTag nbt.Tag) (blockMap map[uint32]string) {
     //fmt.Printf("nbElements: %v\n", nbElements)
     //fmt.Printf("tag: %v\n", idTag)
 
-    for i := 1; i < nbElements; i++ {
+    for i := 0; i < nbElements; i++ {
         kv, ok := nbt.TagElement(idTag, i)
         if ! ok {
             log.Fatal("Could not load element ", i)
@@ -293,7 +310,17 @@ func main() {
     var blockName string
     var listBlocks bool
 
-    flag.StringVar(&blockName, "blockName", "please set block name", "Name of the block to find")
+    /*
+    profFile, err := os.Create("cpu.prof")
+    defer profFile.Close()
+
+    if err := pprof.StartCPUProfile(profFile); err != nil {
+        log.Fatal("could not start CPU profile: ", err)
+    }
+    defer pprof.StopCPUProfile()
+    */
+
+    flag.StringVar(&blockName, "blockName", "minecraft:netherrack", "Name of the block to find")
     flag.BoolVar(&listBlocks, "listBlocks", false, "Show the list of block and their IDs from level.dat")
     flag.Parse()
 
@@ -305,10 +332,6 @@ func main() {
     rootTag, _, err := nbt.Load(f)
     if err != nil {
         log.Fatal(err)
-    }
-
-    if listBlocks {
-        blockName = "xxxxxxxxxxxxxxxxxxxxxx"
     }
 
     BlockMap = getBlocks(rootTag)
