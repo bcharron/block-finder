@@ -43,7 +43,7 @@ func getTagByPath(tag nbt.Tag, path string) nbt.Tag {
     for _, s := range pathList {
         t, ok = nbt.TagElement(t, s)
         if ! ok {
-            log.Fatal("Element %s not found", s)
+            log.Fatalf("Element %s not found", s)
         }
     }
 
